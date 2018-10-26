@@ -137,6 +137,12 @@ autocmd BufNewFile,BufRead *.sh set tabstop=2 shiftwidth=2 expandtab
 
 set inccommand=nosplit
 
+" Move current line up
+nmap <C-S-Up> ddkP
+
+" Move current line down
+nmap <C-S-Down> ddp
+
 " ---- Plugins configuration
 
 " Default keybindings:
