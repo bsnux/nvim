@@ -39,8 +39,9 @@
 
 ## Text objects
 
-* `:vi'`: Select text delimited by `'` character
-* `:yi'`: Copy text delimited by `'` character
+* `vi'`: Select text delimited by `'` character
+* `yi'`: Copy text delimited by `'` character
+* `yiw`: Copy word
 
 ## Tags
 

@@ -139,6 +139,9 @@ set inccommand=nosplit
 
 " ---- Plugins configuration
 
+" Default keybindings:
+"     <leader>,w: Easy motion
+
 " Fugitive
 nmap <leader>gs :Gstatus<cr>
 
