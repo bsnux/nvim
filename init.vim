@@ -1,4 +1,4 @@
-"----------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
 " Neovim configuration file
 "
 " This file: ~/.config/nvim/init.vim
@@ -12,7 +12,8 @@
 "     Installing `Plug`:
 "     $ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 "       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"----------------------------------------------------------------------------
+" ----------------------------------------------------------------------------
+
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'morhetz/gruvbox'
@@ -30,8 +31,11 @@ Plug 'easymotion/vim-easymotion'
 Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'machakann/vim-highlightedyank'
 
 call plug#end()
+
+" ---- Generic configuration
 
 set nu
 au TermOpen * setlocal nonumber norelativenumber
@@ -66,9 +70,8 @@ endif
 " Set mouse
 set mouse=a
 
-" Copying to clipboard using `y`
-"    you'll need vim with clipboard support:
-"    alias vi=vimx
+" Copying to clipboard using `y`:
+"     macOS: `brew install reattach-to-user-namespace`
 set clipboard=unnamedplus
 
 " Color schemes
@@ -91,24 +94,6 @@ cnoremap <C-B>	<Left>
 cnoremap <C-D>	<Del>
 cnoremap <C-E>	<End>
 cnoremap <C-F>	<Right>
-
-" Fugitive
-nmap <leader>gs :Gstatus<cr>
-
-" lightline
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
-
-" deoplete
-let g:deoplete#enable_at_startup = 1
 
 " search for visually hightlighted text
 " %s//<your-replacement-string>
@@ -145,11 +130,38 @@ autocmd BufNewFile,BufRead *.go setlocal tabstop=4
 autocmd BufNewFile,BufRead Jenkinsfile set ft=groovy
 
 " Bash
+" show existing tab with 4 spaces width:       set tabstop=2
+" when indenting with '>', use 4 spaces width: set shiftwidth=2
+" On pressing tab, insert 4 spaces:            set expandtab
 autocmd BufNewFile,BufRead *.sh set tabstop=2 shiftwidth=2 expandtab
+
+set inccommand=nosplit
+
+" ---- Plugins configuration
+
+" Fugitive
+nmap <leader>gs :Gstatus<cr>
+
+" lightline
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
 
 " fzf
 " enter:    current window
 " ctrl-t:   new tab
 " ctrl-x:   horizontal split
 " ctrl-v:   vertical split
-map <leader>t :FZF<CR>
+map <C-p> :FZF<CR>
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
