@@ -1,12 +1,3 @@
-" ----------------------------------------------------------------------------
-" Neovim configuration file
-"
-" This file: ~/.config/nvim/init.vim
-"
-" Works with:
-"     - Fedora 27/Neovim 0.2.2
-"     - Fedora 28/Neovim 0.3.0
-"     - macOS 10.13.6
 "
 " Plugins
 "     Installing `Plug`:
@@ -18,9 +9,11 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-fugitive'
+Plug 'jreybert/vimagit'
 Plug 'neomake/neomake'
 Plug 'itchyny/lightline.vim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-go'
 Plug 'blueshirts/darcula'
 Plug 'altercation/vim-colors-solarized'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
@@ -32,8 +25,16 @@ Plug 'mileszs/ack.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'machakann/vim-highlightedyank'
+Plug 'scrooloose/nerdcommenter'
+Plug 'w0rp/ale'
+Plug 'majutsushi/tagbar'
 
 call plug#end()
+
+" ---- Default keybindings:
+"     <leader>,w	Easy motion
+"     <C-o>		Jump backward
+"     <C-i>		Jump forward
 
 " ---- Generic configuration
 
@@ -124,7 +125,7 @@ endfunction
 map <silent> <C-E> :call ToggleVExplorer()<CR>
 
 " Go files
-autocmd BufNewFile,BufRead *.go setlocal tabstop=4
+autocmd BufNewFile,BufRead *.go setlocal tabstop=4 shiftwidth=4
 
 " Jenkinsfile
 autocmd BufNewFile,BufRead Jenkinsfile set ft=groovy
@@ -143,10 +144,25 @@ nmap <C-S-Up> ddkP
 " Move current line down
 nmap <C-S-Down> ddp
 
+" This will work out of the box for GUI Nvim
+set autoread
+
 " ---- Plugins configuration
 
-" Default keybindings:
-"     <leader>,w: Easy motion
+" ale
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+
+" vim-go
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
+"   Ctrl-t go back
+autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def-tab)
+"   Enable deoplete on startup
+let g:deoplete#enable_at_startup = 1
+
+" nerdcommenter
+map <C-\> <plug>NERDCommenterToggle
 
 " Fugitive
 nmap <leader>gs :Gstatus<cr>
