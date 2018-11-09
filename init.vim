@@ -52,12 +52,14 @@ set termguicolors
 set splitbelow
 set splitright
 
+set cursorline
+
 " Tell Vim which characters to show for expanded TABs,
 " trailing whitespace, and end-of-lines. VERY useful!
-if &listchars ==# 'eol:$'
-  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-endif
-set list
+"if &listchars ==# 'eol:$'
+"  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+"endif
+"set list
 
 " Also highlight all tabs and trailing whitespace characters.
 "highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
@@ -77,7 +79,8 @@ set clipboard=unnamedplus
 
 " Color schemes
 set bg=dark
-colorscheme gruvbox
+"colorscheme gruvbox
+colorscheme darcula
 
 " Find merge conflict markers
 map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR><Paste>
@@ -146,6 +149,23 @@ nmap <C-S-Down> ddp
 
 " This will work out of the box for GUI Nvim
 set autoread
+
+" Format document
+nmap <leader>f gg=G
+
+" Remove trailing whitespaces with F5
+function! <SID>StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
+nnoremap <silent> <F5> :call <SID>StripTrailingWhitespaces()<CR>
 
 " ---- Plugins configuration
 
