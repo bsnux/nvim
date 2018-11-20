@@ -135,6 +135,14 @@ $ vim scp://username@host//path/to/file
 :set list
 ```
 
+## Selecting and replacing
+
+Example, let's replace `foo` with `bar`:
+
+1. `/foo`
+2. `cgnbar<esc>`
+3. `.`
+
 ## Misc
 
 * `:retab`: Replace tabs for spaces
