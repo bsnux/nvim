@@ -28,6 +28,9 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'scrooloose/nerdcommenter'
 Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
+Plug 'jaywilliams/vim-vwilight'
+Plug 'joshdick/onedark.vim'
+Plug 'SirVer/ultisnips'
 
 call plug#end()
 
@@ -79,8 +82,8 @@ set clipboard=unnamedplus
 
 " Color schemes
 set bg=dark
-"colorscheme gruvbox
-colorscheme darcula
+" colorscheme darcula
+colorscheme onedark
 
 " Find merge conflict markers
 map <leader>fc /\v^[<\|=>]{7}( .*\|$)<CR><Paste>
@@ -91,6 +94,8 @@ ca tn tabnew
 " Emacs keybiding for insert mode
 imap <C-e> <esc>$a
 imap <C-a> <esc>0i
+imap <C-f> <esc>lli
+imap <C-b> <esc>i
 
 " Emacs keys for command line
 cnoremap <C-A>	<Home>
@@ -128,7 +133,7 @@ endfunction
 map <silent> <C-E> :call ToggleVExplorer()<CR>
 
 " Go files
-autocmd BufNewFile,BufRead *.go setlocal tabstop=4 shiftwidth=4
+autocmd BufNewFile,BufRead *.go setlocal tabstop=2 shiftwidth=2
 
 " Jenkinsfile
 autocmd BufNewFile,BufRead Jenkinsfile set ft=groovy
@@ -210,3 +215,6 @@ let g:deoplete#enable_at_startup = 1
 map <C-p> :FZF<CR>
 " [Buffers] Jump to the existing window if possible
 let g:fzf_buffers_jump = 1
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"

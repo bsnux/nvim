@@ -135,7 +135,7 @@ $ vim scp://username@host//path/to/file
 :set list
 ```
 
-## Selecting and replacing
+## Selecting and replacing (similar to selected multiples words)
 
 Example, let's replace `foo` with `bar`:
 
