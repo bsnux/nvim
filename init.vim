@@ -144,6 +144,12 @@ autocmd BufNewFile,BufRead Jenkinsfile set ft=groovy
 " On pressing tab, insert 4 spaces:            set expandtab
 autocmd BufNewFile,BufRead *.sh set tabstop=2 shiftwidth=2 expandtab
 
+" Python
+au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent
+
+" Markdown
+au BufRead,BufNewFile *.md setlocal textwidth=80
+
 set inccommand=nosplit
 
 " Move current line up

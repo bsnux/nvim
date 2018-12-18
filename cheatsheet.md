@@ -36,6 +36,7 @@
 * `H`: Go to top of the screen
 * `L`: Go to bottom of the screen
 * `M`: Go to medium of the screen
+* `;`: Repeat last cursor movement
 
 ## Text objects
 
@@ -142,6 +143,14 @@ Example, let's replace `foo` with `bar`:
 1. `/foo`
 2. `cgnbar<esc>`
 3. `.`
+
+## Re-formating lines to wrap to 80 chars
+
+```
+:set textwidth=80
+```
+
+Select lines with `v` and then reformat lines with `gq`
 
 ## Misc
 
