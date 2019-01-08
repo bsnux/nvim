@@ -31,6 +31,8 @@ Plug 'majutsushi/tagbar'
 Plug 'jaywilliams/vim-vwilight'
 Plug 'joshdick/onedark.vim'
 Plug 'SirVer/ultisnips'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
+Plug 'terryma/vim-multiple-cursors'
 
 call plug#end()
 
@@ -109,28 +111,28 @@ cnoremap <C-F>	<Right>
 vnoremap <c-f> y<ESC>/<c-r>"<CR>
 
 " Explorer
-let g:netrw_winsize = 25
-let g:netrw_browse_split = 3
-function! ToggleVExplorer()
-  " Toggle Vexplore with Ctrl-E
-  if exists("t:expl_buf_num")
-      let expl_win_num = bufwinnr(t:expl_buf_num)
-      if expl_win_num != -1
-          let cur_win_nr = winnr()
-          exec expl_win_num . 'wincmd w'
-          close
-          exec cur_win_nr . 'wincmd w'
-          unlet t:expl_buf_num
-      else
-          unlet t:expl_buf_num
-      endif
-  else
-      exec '1wincmd w'
-      Vexplore
-      let t:expl_buf_num = bufnr("%")
-  endif
+let g:netrw_winsize = 15
+let g:netrw_browse_split = 2
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:NetrwIsOpen=0
+
+function! ToggleNetrw()
+    if g:NetrwIsOpen
+        let i = bufnr("$")
+        while (i >= 1)
+            if (getbufvar(i, "&filetype") == "netrw")
+                silent exe "bwipeout " . i 
+            endif
+            let i-=1
+        endwhile
+        let g:NetrwIsOpen=0
+    else
+        let g:NetrwIsOpen=1
+        silent Lexplore
+    endif
 endfunction
-map <silent> <C-E> :call ToggleVExplorer()<CR>
+map <silent> <C-E> :call ToggleNetrw()<CR>
 
 " Go files
 autocmd BufNewFile,BufRead *.go setlocal tabstop=2 shiftwidth=2
@@ -146,6 +148,9 @@ autocmd BufNewFile,BufRead *.sh set tabstop=2 shiftwidth=2 expandtab
 
 " Python
 au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent
+
+" JS
+au BufNewFile,BufRead *.js set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent
 
 " Markdown
 au BufRead,BufNewFile *.md setlocal textwidth=80
@@ -177,6 +182,19 @@ function! <SID>StripTrailingWhitespaces()
     call cursor(l, c)
 endfunction
 nnoremap <silent> <F5> :call <SID>StripTrailingWhitespaces()<CR>
+
+" Change local working dir upon tab creation
+autocmd BufEnter * silent! lcd %:p:h
+function! OnTabEnter(path)
+  if isdirectory(a:path)
+    let dirname = a:path
+  else
+    let dirname = fnamemodify(a:path, ":h")
+  endif
+  execute "tcd ". dirname
+endfunction()
+
+autocmd TabNewEntered * call OnTabEnter(expand("<amatch>"))
 
 " ---- Plugins configuration
 

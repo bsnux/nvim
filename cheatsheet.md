@@ -76,7 +76,7 @@ echo "tags" >> ~/.global_ignore
 git config --global core.excludesfile $HOME/.global_ignore
 ```
 
-Usefull commands:
+Useful commands:
 
 * `:tag name`: Jump to `name` tag
 * `vim -t name`: Jump to `name` tag from command line
@@ -152,6 +152,18 @@ Example, let's replace `foo` with `bar`:
 
 Select lines with `v` and then reformat lines with `gq`
 
+## Forward the output of your external command to the current window and line 
+
+Examples:
+
+```
+:.! pwd
+```
+
+```
+:.! cal
+```
+
 ## Misc
 
 * `:retab`: Replace tabs for spaces
@@ -162,3 +174,8 @@ Select lines with `v` and then reformat lines with `gq`
 * `:set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<`: Displaying invisible chars
 * `:set list!`: Hide invisible chars
 * `$ gvim --remote-tab README.md`: Open `README.md` file using a new tab on `gvim`
+* `K`: Type this while the cursor is over any Unix-based command, and you will
+be taken straight to that command's manual page.
+* `Ctrl-o` `Ctrl-o`: Navigate to previous cursor position in buffer
+* `{`: Jump to previous paragraph/function/block
+* `}`: Jump to next paragraph/function/block
