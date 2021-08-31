@@ -1,4 +1,4 @@
-# nvim
+# NeoVim +0.5 configuration
 
 Personal [Neovim](https://neovim.io/) configuration
 
@@ -16,16 +16,9 @@ Create a new directory and symlink for the configuration file:
 
 ```
 $ mkdir -p ~/.config/nvim/
-$ ln -s ~/init.vim ~/.config/nvim/init.vim
+$ ln -s ~/init.lua ~/.config/nvim/init.lua
 ```
 
-Install `Plug` from command line:
-
-```
-$ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-```
-
-Open *NeoVim* and install plugins executing `:PlugInstall` *Neovim* command.
+Open *NeoVim* and install plugins executing `:PackerInstall` *Neovim* command.
 
 You're set!
