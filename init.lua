@@ -1,6 +1,6 @@
--- 
+--
 -- NeoVim configuration
--- 
+--
 local o = vim.o				-- global options
 local wo = vim.wo			-- window scope options
 local bo = vim.bo			-- buffer scope options
@@ -9,13 +9,6 @@ local cmd = vim.cmd
 local opt = vim.opt
 local g = vim.g
 local map = vim.api.nvim_set_keymap
-
--- Making sure `packer` is installed
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
-  vim.cmd 'packadd packer.nvim'
-end
 
 wo.number = true
 
@@ -29,7 +22,7 @@ opt.tabstop = 2         -- number of spaces tabs count for
 opt.expandtab = true    -- using spaces instead of tabs
 opt.shiftwidth = 2      -- size of an indent
 
-opt.termguicolors = true 
+opt.termguicolors = true
 cmd "colo base16-ocean"
 
 g.mapleader = ','
@@ -44,11 +37,34 @@ map('i', '<c-k>', '<Esc>d$i', {})
 map('i', '<c-b>', '<Esc>i', {})
 map('i', '<c-f>', '<Esc>lli', {})
 
--- Plugins configuration
-local packer = require'packer'
-packer.startup(function()
-  local use = use
-  use 'wbthomason/packer.nvim'
+-- netrw
+g.netrw_banner = 0
+g.netrw_liststyle = 3
+g.netrw_browse_split = 4
+g.netrw_altv = 1
+g.netrw_winsize = 25
+
+-- removing traling whitespaces on save
+cmd [[au BufWritePre * :%s/\s\+$//e]]
+
+-- open a terminal pane on the right using :Term
+cmd [[command Term :botright vsplit term://$SHELL]]
+-- Terminal visual tweaks
+cmd [[
+    autocmd TermOpen * setlocal listchars= nonumber norelativenumber nocursorline
+    autocmd TermOpen * startinsert
+    autocmd BufLeave term://* stopinsert
+]]
+
+-- Make sure Packer is installed
+local fn = vim.fn
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+if fn.empty(fn.glob(install_path)) > 0 then
+  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+end
+
+return require('packer').startup(function(use)
+  -- Plugins here
   use {
     'nvim-telescope/telescope.nvim',
     requires = { {'nvim-lua/plenary.nvim'} }
@@ -58,72 +74,44 @@ packer.startup(function()
   use 'chriskempson/base16-vim'
   use {
     'hoob3rt/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true}
+    requires = {'kyazdani42/nvim-web-devicons', opt = true},
   }
-  use 'neovim/nvim-lspconfig'
-  use 'hrsh7th/nvim-cmp'                -- Autocompletion plugin
-  use 'hrsh7th/cmp-nvim-lsp'            -- LSP source for nvim-cmp
-  use 'saadparwaiz1/cmp_luasnip'        -- Snippets source for nvim-cmp
-  use 'L3MON4D3/LuaSnip'                -- Snippets plugin
-  end
-)
+  -- Plugins configuration
+  require('lualine').setup {
+    options = {
+      theme='material',
+    }
+  }
 
-o.completeopt = 'menuone,noselect'
-local luasnip = require 'luasnip'
-
--- nvim-cmp setup
-local cmp = require 'cmp'
-cmp.setup {
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
-    end,
-  },
-  mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+  -- snippet engine
+  use 'dcampos/nvim-snippy'
+  require('snippy').setup({
+    mappings = {
+        is = {
+            ['<Tab>'] = 'expand_or_advance',
+            ['<S-Tab>'] = 'previous',
+        },
+        nx = {
+            ['<leader>x'] = 'cut_text',
+        },
     },
-    ['<Tab>'] = function(fallback)
-      if vim.fn.pumvisible() == 1 then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-n>', true, true, true), 'n')
-      elseif luasnip.expand_or_jumpable() then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>luasnip-expand-or-jump', true, true, true), '')
-      else
-        fallback()
-      end
-    end,
-    ['<S-Tab>'] = function(fallback)
-      if vim.fn.pumvisible() == 1 then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-p>', true, true, true), 'n')
-      elseif luasnip.jumpable(-1) then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>luasnip-jump-prev', true, true, true), '')
-      else
-        fallback()
-      end
-    end,
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
-  },
-}
+  })
 
-require'lualine'.setup {
-  options = {
-    theme = 'material',
-  }
-}
+  -- Collection of configurations for the built-in LSP client
+  use 'neovim/nvim-lspconfig'
 
--- `gopls` requires a `go.mod` file or a `.git` directory as `root_dir`
-require'lspconfig'.gopls.setup{}
+  -- LSP activations
+  require'lspconfig'.pyright.setup{}        -- python3 -m pip install pyright
+  require'lspconfig'.bashls.setup{}         -- npm i -g bash-language-server
+  require'lspconfig'.terraformls.setup{}    -- brew install hashicorp/tap/terraform-ls
+  require'lspconfig'.ansiblels.setup{}      -- npm install -g @ansible/ansible-language-server
 
-map('n', '<Leader>ff',[[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]] , {noremap = true})
-map('n', '<leader>bb', [[<cmd>lua require('telescope.builtin').buffers({previewer = false})<CR>]], {noremap = true})
-map('n', '<leader>fg', [[<cmd>lua require('telescope.builtin').live_grep({})<CR>]], {noremap = true})
+  map('n', '<Leader>ff',[[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]] , {noremap = true})
+  map('n', '<leader>bb', [[<cmd>lua require('telescope.builtin').buffers({previewer = false})<CR>]], {noremap = true})
+  map('n', '<leader>fg', [[<cmd>lua require('telescope.builtin').live_grep({})<CR>]], {noremap = true})
+
+  -- Automatically set up configuration after cloning packer.nvim
+  if packer_bootstrap then
+    require('packer').sync()
+  end
+end)

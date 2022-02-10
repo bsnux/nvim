@@ -1,0 +1,9 @@
+snippet debug
+	currentBuild.result = 'ABORTED'
+	error('debug')
+snippet node
+	node('${1:Test}'){
+	}
+snippet stage
+	stage('${1:Test}'){
+	}
