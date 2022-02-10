@@ -17,6 +17,7 @@ Create a new directory and symlink for the configuration file:
 ```
 $ mkdir -p ~/.config/nvim/
 $ ln -s nvim/init.lua ~/.config/nvim/init.lua
+$ ln -s nvim/snippets ~/.config/nvim/snippets
 ```
 
 Open *NeoVim* and install plugins executing `:PackerInstall` *Neovim* command.
