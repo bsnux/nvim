@@ -97,6 +97,8 @@ return require('packer').startup(function(use)
     },
   })
 
+  use 'martinda/Jenkinsfile-vim-syntax'
+
   -- Collection of configurations for the built-in LSP client
   use 'neovim/nvim-lspconfig'
 
